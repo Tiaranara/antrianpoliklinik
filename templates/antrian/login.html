@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Masuk Pasien - RS SehatPlus{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 70vh;">
+    <div class="card" style="width: 100%; max-width: 450px; margin: 0 auto; padding: 3rem 2.5rem;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="width: 64px; height: 64px; border-radius: 16px; background: #e0f2fe; color: var(--primary-dark); display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 1rem;">
+                <i class='bx bx-id-card'></i>
+            </div>
+            <h2 style="color: var(--primary-dark); margin-bottom: 0.5rem; font-size: 1.75rem; font-weight: 800;">Masuk Pasien</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">Gunakan NIK KTP Anda untuk memulai layanan resepsionis digital.</p>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="nik" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-main); font-size: 0.95rem;">Nomor Induk Kependudukan (NIK) <span style="color: #ef4444;">*</span></label>
+                <div style="position: relative;">
+                    <i class='bx bx-user' style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.25rem;"></i>
+                    <input type="text" id="nik" name="nik" required pattern="\d{16}" title="NIK harus 16 digit angka" class="form-control" placeholder="Masukkan 16 digit NIK" style="padding-left: 2.75rem; height: 48px; border-radius: 12px;">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; height: 48px; border-radius: 12px; font-weight: 600; font-size: 1rem; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4);">
+                Masuk Sekarang
+            </button>
+            <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
+                Belum pernah berobat? <a href="{% url 'register_pasien' %}" style="color: var(--primary); font-weight: 600;">Daftar di sini</a>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Kembali ke beranda -->
+    <div style="margin-top: 2.5rem; text-align: center;">
+        <a href="{% url 'beranda' %}" style="color: var(--text-muted); font-size: 0.95rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.4rem; transition: color 0.3s;">
+            <i class='bx bx-arrow-back'></i> Kembali ke Beranda
+        </a>
+    </div>
+</div>
+
+<style>
+    .form-control:focus {
+        border-color: var(--primary);
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+    }
+    a:hover {
+        color: var(--primary-dark) !important;
+    }
+</style>
+{% endblock %}

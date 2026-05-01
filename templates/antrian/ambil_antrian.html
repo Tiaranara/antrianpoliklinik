@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Ambil Antrian - RS SehatPlus{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h2 style="margin-bottom: 0.5rem; text-align: center; color: var(--primary-dark);">Ambil Antrian</h2>
+    <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Silakan pilih jadwal kunjungan poliklinik Anda.</p>
+
+    <!-- Info Pasien -->
+    <div style="background: var(--bg-light); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: 1.5rem;">
+        <h4 style="margin-bottom: 0.5rem; color: var(--primary-dark);">Data Pasien</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.875rem;">
+            <div><strong>Nomor RM:</strong> {{ pasien.no_rekam_medis|default:"-" }}</div>
+            <div><strong>NIK:</strong> {{ pasien.nik }}</div>
+            <div><strong>Nama:</strong> {{ pasien.nama }}</div>
+            <div><strong>No. Telp:</strong> {{ pasien.no_telepon }}</div>
+        </div>
+    </div>
+
+    <form method="POST" action="{% url 'ambil_antrian' %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="poli">Pilih Poliklinik <span style="color: red;">*</span></label>
+            <select id="poli" name="poli" class="form-control" required onchange="filterDokter()">
+                <option value="">-- Pilih Poliklinik --</option>
+                {% for poli in polis %}
+                    <option value="{{ poli.id }}" {% if request.GET.poli == poli.id|stringformat:"s" %}selected{% endif %}>{{ poli.nama }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="dokter">Pilih Dokter <span style="color: red;">*</span></label>
+            <select id="dokter" name="dokter" class="form-control" required>
+                <option value="">-- Pilih Dokter --</option>
+                {% for dokter in dokters %}
+                    <option value="{{ dokter.id }}" data-poli="{{ dokter.poli_id }}">{{ dokter.nama }} ({{ dokter.jadwal|default:"Sesuai Jadwal RS" }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label for="tanggal">Tanggal Kunjungan <span style="color: red;">*</span></label>
+                <input type="date" id="tanggal" name="tanggal" class="form-control" required min="{% now "Y-m-d" %}">
+            </div>
+            <div class="form-group">
+                <label for="waktu_kunjungan">Waktu Kunjungan <span style="color: red;">*</span></label>
+                <input type="time" id="waktu_kunjungan" name="waktu_kunjungan" class="form-control" required>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; font-size: 1.1rem; padding: 1rem;">
+            <i class='bx bx-check-circle'></i> Lanjut ke Konfirmasi
+        </button>
+    </form>
+</div>
+
+<!-- Kembali ke beranda -->
+<div style="margin-top: 2rem; text-align: center;">
+    <a href="{% url 'beranda' %}" style="color: var(--text-muted); font-size: 0.95rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.4rem; transition: color 0.3s;">
+        <i class='bx bx-arrow-back'></i> Kembali ke Beranda
+    </a>
+</div>
+
+<script>
+    function filterDokter() {
+        var poliId = document.getElementById("poli").value;
+        var dokterSelect = document.getElementById("dokter");
+        var options = dokterSelect.getElementsByTagName("option");
+        
+        dokterSelect.value = ""; // Reset selection
+        
+        for (var i = 1; i < options.length; i++) {
+            var option = options[i];
+            if (!poliId || option.getAttribute("data-poli") === poliId) {
+                option.style.display = "";
+            } else {
+                option.style.display = "none";
+            }
+        }
+    }
+    
+    // Run on load in case poli is pre-selected via URL query string
+    document.addEventListener("DOMContentLoaded", filterDokter);
+</script>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Daftar Antrian Hari Ini - RS SehatPlus{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div>
+        <h2 style="color: var(--primary-dark);">Daftar Antrian Hari Ini</h2>
+        <p style="color: var(--text-muted);">Tanggal: {{ tanggal|date:"d F Y" }}</p>
+    </div>
+    <a href="{% url 'ambil_antrian' %}" class="btn btn-primary">
+        <i class='bx bx-plus'></i> Ambil Antrian Baru
+    </a>
+</div>
+
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>No. Antrian</th>
+                <th>Waktu</th>
+                <th>Poliklinik</th>
+                <th>Dokter</th>
+                <th>Nama Pasien</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for antrian in antrian_list %}
+                <tr>
+                    <td style="font-weight: 700; color: var(--primary);">{{ antrian.nomor_antrian|stringformat:"03d" }}</td>
+                    <td>{{ antrian.waktu_kunjungan|time:"H:i" }}</td>
+                    <td>{{ antrian.poli.nama }}</td>
+                    <td>{{ antrian.dokter.nama }}</td>
+                    <td>{{ antrian.pasien.nama }}</td>
+                    <td>
+                        <span class="badge badge-{{ antrian.status|lower }}">{{ antrian.status }}</span>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 3rem;">
+                        <i class='bx bx-info-circle' style="font-size: 2rem; color: var(--text-muted); margin-bottom: 1rem; display: block;"></i>
+                        Belum ada antrian yang terdaftar untuk hari ini.
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Kembali ke beranda -->
+<div style="margin-top: 2.5rem; text-align: center;">
+    <a href="{% url 'beranda' %}" style="color: var(--text-muted); font-size: 0.95rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.4rem; transition: color 0.3s;">
+        <i class='bx bx-arrow-back'></i> Kembali ke Beranda
+    </a>
+</div>
+{% endblock %}

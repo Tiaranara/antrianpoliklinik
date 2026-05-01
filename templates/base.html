@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistem Antrian Poli Klinik{% endblock %}</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Boxicons for icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Custom Styles -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <nav style="background: transparent; padding: 1.5rem 0; position: absolute; top: 0; width: 100%; z-index: 100;">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="{% url 'beranda' %}" style="font-size: 1.5rem; font-weight: 800; color: var(--primary-dark); display: inline-flex; align-items: center; gap: 0.5rem; letter-spacing: -0.5px;">
+                <i class='bx bx-clinic' style="font-size: 1.75rem; color: var(--primary);"></i> RS SehatPlus
+            </a>
+            
+            <div style="display: flex; gap: 0.75rem;">
+                {% if request.session.pasien_id %}
+                    <a href="{% url 'logout_pasien' %}" class="btn btn-secondary" style="border-radius: 99px; padding: 0.5rem 1.25rem; border: 2px solid var(--border); box-shadow: var(--shadow-sm); display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.875rem;">
+                        <i class='bx bx-log-out'></i> Keluar
+                    </a>
+                {% elif request.resolver_match.url_name != 'login_pasien' and request.resolver_match.url_name != 'register_pasien' %}
+                    <a href="{% url 'login_pasien' %}" class="btn btn-primary" style="font-size: 0.875rem; border-radius: 99px; padding: 0.5rem 1.25rem; box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.39); display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600;">
+                        <i class='bx bx-log-in' style="font-size: 1.125rem;"></i> Masuk Pasien
+                    </a>
+                    <a href="{% url 'register_pasien' %}" class="btn btn-secondary" style="font-size: 0.875rem; border-radius: 99px; padding: 0.5rem 1.25rem; background: var(--surface); color: var(--text-main); border: 1px solid var(--border); display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; box-shadow: var(--shadow-sm);">
+                        <i class='bx bx-user-plus' style="font-size: 1.125rem;"></i> Daftar Baru
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <main class="container main-content">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer style="text-align: center; padding: 2rem 0; color: var(--text-muted); font-size: 0.875rem; margin-top: auto;">
+        <div class="container">
+            <p>&copy; {% now "Y" %} Sistem Antrian Poli Klinik RS SehatPlus. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
