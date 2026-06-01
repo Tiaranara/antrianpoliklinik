@@ -3,6 +3,13 @@
 {% block title %}Daftar Antrian Hari Ini - RS SehatPlus{% endblock %}
 
 {% block content %}
+<!-- Kembali ke beranda -->
+<div style="display: flex; flex-direction: column; align-items: flex-start;">
+    <a href="{% url 'beranda' %}" class="back-link" style="margin-bottom: 1.5rem; margin-top: 0;">
+        <i class='bx bx-left-arrow-alt'></i> Kembali ke Beranda
+    </a>
+</div>
+
 <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
     <div>
         <h2 style="color: var(--primary-dark);">Daftar Antrian Hari Ini</h2>
@@ -47,12 +54,5 @@
             {% endfor %}
         </tbody>
     </table>
-</div>
-
-<!-- Kembali ke beranda -->
-<div style="margin-top: 2.5rem; text-align: center;">
-    <a href="{% url 'beranda' %}" style="color: var(--text-muted); font-size: 0.95rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.4rem; transition: color 0.3s;">
-        <i class='bx bx-arrow-back'></i> Kembali ke Beranda
-    </a>
 </div>
 {% endblock %}

@@ -3,8 +3,15 @@
 {% block title %}Pendaftaran Pasien Baru - RS SehatPlus{% endblock %}
 
 {% block content %}
-<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 70vh; padding: 2rem 0;">
-    <div class="card" style="width: 100%; max-width: 500px; margin: 0 auto; padding: 3rem 2.5rem;">
+<!-- Kembali ke beranda -->
+<div style="display: flex; justify-content: flex-start; width: 100%; margin-bottom: 1rem;">
+    <a href="{% url 'beranda' %}" class="back-link" style="margin-top: 0; margin-bottom: 0;">
+        <i class='bx bx-left-arrow-alt'></i> Kembali ke Beranda
+    </a>
+</div>
+
+<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 60vh; padding: 2rem 0;">
+    <div class="card" style="width: 100%; max-width: 500px; padding: 3rem 2.5rem;">
         <div style="text-align: center; margin-bottom: 2rem;">
             <div style="width: 64px; height: 64px; border-radius: 16px; background: #f3e8ff; color: var(--accent); display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 1rem;">
                 <i class='bx bx-user-plus'></i>
@@ -47,13 +54,6 @@
                 Sudah pernah berobat? <a href="{% url 'login_pasien' %}" style="color: var(--primary); font-weight: 600;">Masuk di sini</a>
             </div>
         </form>
-    </div>
-    
-    <!-- Kembali ke beranda -->
-    <div style="margin-top: 2.5rem; text-align: center;">
-        <a href="{% url 'beranda' %}" style="color: var(--text-muted); font-size: 0.95rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.4rem; transition: color 0.3s;">
-            <i class='bx bx-arrow-back'></i> Kembali ke Beranda
-        </a>
     </div>
 </div>
 

@@ -51,10 +51,75 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer style="text-align: center; padding: 2rem 0; color: var(--text-muted); font-size: 0.875rem; margin-top: auto;">
-        <div class="container">
-            <p>&copy; {% now "Y" %} Sistem Antrian Poli Klinik RS SehatPlus. All Rights Reserved.</p>
+    {% if request.resolver_match.url_name != 'login_pasien' and request.resolver_match.url_name != 'register_pasien' %}
+    <footer class="main-footer">
+        <div class="container footer-grid">
+            <div class="footer-col brand-col">
+                <a href="{% url 'beranda' %}" class="footer-logo">
+                    <span class="logo-square"></span>
+                    <span class="logo-text">SehatPlus</span>
+                </a>
+                <p class="footer-desc">
+                    Sistem antrian pelayanan kesehatan poliklinik yang cepat, modern, dan transparan.
+                </p>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class='bx bxl-facebook'></i></a>
+                    <a href="#" aria-label="Twitter"><i class='bx bxl-twitter'></i></a>
+                    <a href="#" aria-label="Instagram"><i class='bx bxl-instagram'></i></a>
+                    <a href="#" aria-label="Youtube"><i class='bx bxl-youtube'></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Navigasi</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'beranda' %}">Beranda</a></li>
+                    {% if request.session.pasien_id %}
+                        <li><a href="{% url 'ambil_antrian' %}">Ambil Antrian</a></li>
+                        <li><a href="{% url 'daftar_antrian' %}">Riwayat Antrian</a></li>
+                    {% else %}
+                        <li><a href="{% url 'login_pasien' %}">Masuk Pasien</a></li>
+                        <li><a href="{% url 'register_pasien' %}">Daftar Baru</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Layanan Poli</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Poli Umum</a></li>
+                    <li><a href="#">Poli Gigi</a></li>
+                    <li><a href="#">Poli Anak</a></li>
+                    <li><a href="#">Poli Kandungan</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Kemitraan</h4>
+                <ul class="footer-links">
+                    <li><a href="#">BPJS Kesehatan</a></li>
+                    <li><a href="#">Kemenkes RI</a></li>
+                    <li><a href="#">Dinas Kesehatan</a></li>
+                    <li><a href="#">SatuSehat</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Bantuan</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Hubungi Kami</a></li>
+                    <li><a href="#">Tanya Jawab (FAQ)</a></li>
+                    <li><a href="#">Kebijakan Privasi</a></li>
+                    <li><a href="#">Syarat & Ketentuan</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container footer-bottom-content">
+                <p>&copy; {% now "Y" %} RS SehatPlus. Seluruh hak cipta dilindungi undang-undang.</p>
+            </div>
         </div>
     </footer>
+    {% endif %}
 </body>
 </html>

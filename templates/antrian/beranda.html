@@ -4,144 +4,281 @@
 
 {% block content %}
 {% if request.session.pasien_id %}
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+<!-- Dashboard Header -->
+<div class="dashboard-header">
+    <div class="welcome-text">
+        <h1>Selamat Datang Kembali</h1>
+        <p>Halo, <strong>{{ pasien.nama }}</strong>. Silakan pilih layanan kesehatan Anda hari ini.</p>
+    </div>
+    <div class="pasien-badge-card">
+        <i class='bx bx-user-circle'></i>
         <div>
-            <h1 style="color: var(--primary-dark); font-size: 2rem; margin-bottom: 0.5rem;"><i class='bx bx-clinic' style="vertical-align: middle;"></i> RS SehatPlus</h1>
-            <p style="color: var(--text-muted); font-size: 1.1rem;">Halo, <strong>{{ pasien.nama }}</strong> ({{ pasien.no_rekam_medis }})</p>
+            <div
+                style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
+                No. Rekam Medis</div>
+            <div class="pasien-rm">{{ pasien.no_rekam_medis|default:"RM-PENDING" }}</div>
         </div>
     </div>
+</div>
 
-    <!-- Stats -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
-        <div class="card" style="padding: 1.5rem; text-align: center; border-top: 4px solid var(--primary);">
-            <div style="font-size: 3rem; color: var(--primary); margin-bottom: 0.5rem;"><i class='bx bx-calendar-event'></i></div>
-            <h3 style="font-size: 1.2rem; color: var(--text-main); margin-bottom: 0.25rem;">Total Antrian Hari Ini</h3>
-            <p style="font-size: 2rem; font-weight: 700; color: var(--primary-dark);">{{ total_antrian }}</p>
+<!-- Quick Stats and Action Grid -->
+<div class="dashboard-grid">
+    <!-- Stat card -->
+    <div class="stat-glass-card">
+        <div class="stat-icon">
+            <i class='bx bx-calendar-event'></i>
         </div>
-        
-        <div class="card" style="padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; border: none;">
-            <i class='bx bx-list-ol' style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.9;"></i>
-            <h3 style="font-size: 1.2rem; margin-bottom: 1rem;">Lihat Semua Jadwal</h3>
-            <a href="{% url 'daftar_antrian' %}" class="btn" style="background: rgba(255,255,255,0.2); backdrop-filter: blur(5px); color: white; width: 100%;">Cek Jadwal Poli</a>
-        </div>
+        <h3
+            style="font-size: 0.95rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
+            Total Antrean Hari Ini</h3>
+        <div class="stat-number">{{ total_antrian }}</div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Pasien terdaftar hari ini</p>
     </div>
 
-    <!-- Poliklinik List -->
-    <h2 style="margin-bottom: 1.5rem; color: var(--primary-dark); font-size: 1.5rem;"><i class='bx bx-plus-medical'></i> Pilih Layanan Poliklinik</h2>
-    <div class="poli-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
-        {% for poli in polis %}
-            <div class="card poli-card" style="padding: 1.5rem; display: flex; flex-direction: column; height: 100%;">
-                <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;">
-                    <i class='bx bx-heart-circle'></i>
+    <!-- Quick actions -->
+    <div class="action-cards">
+        <a href="{% url 'ambil_antrian' %}" class="action-gradient-card primary">
+            <div class="action-card-header">
+                <div class="action-card-icon">
+                    <i class='bx bx-plus-medical'></i>
                 </div>
-                <h3 style="margin-bottom: 0.5rem; font-size: 1.25rem;">{{ poli.nama }}</h3>
-                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.5rem; line-height: 1.5; flex: 1;">
-                    {{ poli.deskripsi|default:"Layanan medis profesional oleh dokter spesialis berpengalaman."|truncatewords:12 }}
-                </p>
-                <a href="{% url 'ambil_antrian' %}?poli={{ poli.id }}" class="btn btn-primary" style="width: 100%; margin-top: auto;">
-                    Ambil Antrian
-                </a>
+                <i class='bx bx-chevron-right' style="font-size: 1.5rem;"></i>
             </div>
-        {% empty %}
-            <div class="card" style="grid-column: 1 / -1; text-align: center;">
-                <p>Belum ada data Poliklinik.</p>
+            <div>
+                <h3>Ambil Antrean Baru</h3>
+                <p>Mulai pendaftaran antrean dan buat janji temu dengan dokter pilihan Anda.</p>
+                <span class="action-btn">Daftar Antrean</span>
             </div>
-        {% endfor %}
+        </a>
+
+        <a href="{% url 'daftar_antrian' %}" class="action-gradient-card secondary">
+            <div class="action-card-header">
+                <div class="action-card-icon">
+                    <i class='bx bx-time'></i>
+                </div>
+                <i class='bx bx-chevron-right' style="font-size: 1.5rem;"></i>
+            </div>
+            <div>
+                <h3>Pantau Antrean Live</h3>
+                <p>Lihat status dan nomor antrean yang sedang diperiksa secara real-time.</p>
+                <span class="action-btn">Cek Jadwal Poli</span>
+            </div>
+        </a>
     </div>
+</div>
+
+<!-- Poliklinik List -->
+<h2 class="section-title">
+    <i class='bx bx-grid-alt'></i>
+    Pilih Layanan Poliklinik
+</h2>
+<div class="poli-grid">
+    {% for poli in polis %}
+    <div class="card poli-card" style="padding: 2rem; display: flex; flex-direction: column; height: 100%;">
+        {% if "gigi" in poli.nama|lower %}
+        <div class="poli-icon-wrapper dental"><i class='bx bx-smile'></i></div>
+        {% elif "anak" in poli.nama|lower %}
+        <div class="poli-icon-wrapper pediatric"><i class='bx bx-child'></i></div>
+        {% elif "kandungan" in poli.nama|lower or "kebidanan" in poli.nama|lower %}
+        <div class="poli-icon-wrapper obgyn"><i class='bx bx-female'></i></div>
+        {% else %}
+        <div class="poli-icon-wrapper general"><i class='bx bx-plus-medical'></i></div>
+        {% endif %}
+
+        <h3 style="margin-bottom: 0.5rem; font-size: 1.25rem; font-weight: 700; color: var(--text-main);">{{ poli.nama }}</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.6; flex: 1;">
+            {{ poli.deskripsi|default:"Layanan medis profesional oleh dokter spesialis berpengalaman di bidangnya."|truncatewords:15 }}
+        </p>
+        <a href="{% url 'ambil_antrian' %}?poli={{ poli.id }}" class="btn btn-primary"
+            style="width: 100%; border-radius: 12px; font-weight: 600; font-size: 0.9rem;">
+            Ambil Antrian
+        </a>
+    </div>
+    {% empty %}
+    <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+        <p style="color: var(--text-muted);">Belum ada data Poliklinik aktif saat ini.</p>
+    </div>
+    {% endfor %}
+</div>
 
 {% else %}
-    <!-- Hero / Landing for Logged out users -->
-    <div style="min-height: 80vh; display: flex; align-items: center; justify-content: space-between; gap: 4rem; padding-top: 2rem;">
-        
-        <!-- Left Column: Text & Buttons -->
-        <div style="flex: 1; max-width: 600px;">
-            <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(59, 130, 246, 0.1); padding: 0.5rem 1rem; border-radius: 999px; color: var(--primary-dark); font-weight: 600; font-size: 0.875rem; margin-bottom: 2rem; border: 1px solid rgba(59, 130, 246, 0.2);">
-                <i class='bx bx-pulse' style="font-size: 1.25rem;"></i> Inovasi Layanan Kesehatan Digital
-            </div>
-            
-            <h1 style="font-size: 4rem; font-weight: 800; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 1.5rem; color: var(--text-main);">
-                Sistem Antrian <br>
-                <span style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Poliklinik Pintar</span>
-            </h1>
-            
-            <p style="font-size: 1.25rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 3rem;">
-                Tinggalkan cara lama. Mulai daftar antrian secara online dari mana saja, pantau status panggilan secara real-time, dan hemat waktu Anda tanpa perlu menunggu lama di rumah sakit.
-            </p>
-            
+<!-- Hero / Landing for Logged out users -->
+<div
+    style="min-height: 80vh; display: flex; align-items: center; justify-content: space-between; gap: 4rem; padding-top: 2rem;">
+
+    <!-- Left Column: Text & Buttons -->
+    <div style="flex: 1; max-width: 600px;">
+        <div
+            style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(59, 130, 246, 0.1); padding: 0.5rem 1rem; border-radius: 999px; color: var(--primary-dark); font-weight: 600; font-size: 0.875rem; margin-bottom: 2rem; border: 1px solid rgba(59, 130, 246, 0.2);">
+            <i class='bx bx-pulse' style="font-size: 1.25rem;"></i> Inovasi Layanan Kesehatan Digital
         </div>
 
-        <!-- Right Column: Abstract Glass UI Illustration -->
-        <div class="hero-right-col" style="flex: 1; position: relative; height: 500px;">
-            <!-- Decorative Back Glow / Heartbeat effect -->
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 350px; height: 350px; background: radial-gradient(circle, var(--primary) 0%, rgba(255,255,255,0) 70%); filter: blur(50px); border-radius: 50%; opacity: 0.2; animation: heartbeat 2s ease-in-out infinite;"></div>
-            
-            <!-- Floating Card 1: Queue Ticket -->
-            <div class="card" style="position: absolute; top: 15%; right: 5%; width: 320px; padding: 1.5rem; background: rgba(255,255,255,0.85); z-index: 2; animation: float 6s ease-in-out infinite; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);">
-                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--border);">
-                    <div style="width: 50px; height: 50px; border-radius: 12px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.75rem;">
-                        <i class='bx bx-user-pin'></i>
-                    </div>
-                    <div>
-                        <div style="font-weight: 800; color: var(--primary-dark); font-size: 1.1rem;">Antrian A-012</div>
-                        <div style="font-size: 0.875rem; color: var(--text-muted); font-weight: 500;">Poli Jantung & Pembuluh</div>
-                    </div>
-                </div>
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-muted);">
-                        <i class='bx bx-time-five' style="font-size: 1.25rem;"></i> Estimasi Waktu
-                    </div>
-                    <span style="background: #ecfdf5; color: #059669; padding: 0.35rem 0.85rem; border-radius: 99px; font-size: 0.875rem; font-weight: 700; box-shadow: 0 2px 4px rgba(16,185,129,0.2);">10:30 WIB</span>
-                </div>
-            </div>
-            
-            <!-- Floating Card 2: Notification Modal -->
-            <div class="card" style="position: absolute; bottom: 20%; left: -5%; width: 280px; padding: 1.5rem; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 3; animation: float 8s ease-in-out infinite reverse; border: 1px solid rgba(255,255,255,0.6);">
-                <div style="display: flex; align-items: flex-start; gap: 1rem;">
-                    <div style="font-size: 2.5rem; color: var(--secondary); margin-top: -0.25rem; animation: popIn 2.5s infinite;"><i class='bx bxs-check-circle'></i></div>
-                    <div>
-                        <h4 style="font-size: 1.05rem; margin-bottom: 0.25rem; font-weight: 700; color: var(--text-main);">Pendaftaran Sukses</h4>
-                        <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">Data rekam medis Anda telah divalidasi sistem otomatis kami.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Decorative Medical Icons Background -->
-            <div style="position: absolute; top: 0; left: 15%; font-size: 4rem; color: var(--primary); opacity: 0.15; animation: pulse 4s infinite;"><i class='bx bx-plus-medical'></i></div>
-            <div style="position: absolute; bottom: 5%; right: 10%; font-size: 5rem; color: var(--secondary); opacity: 0.1; animation: float 7s infinite;"><i class='bx bx-capsule'></i></div>
-            <div style="position: absolute; top: 40%; right: -10%; font-size: 3rem; color: var(--text-muted); opacity: 0.1; animation: popIn 6s infinite;"><i class='bx bx-dna'></i></div>
-            <div style="position: absolute; bottom: 45%; left: 0%; font-size: 3rem; color: var(--accent); opacity: 0.1; animation: pulse 5s infinite;"><i class='bx bx-heart'></i></div>
-        </div>
+        <h1
+            style="font-size: 4rem; font-weight: 800; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 1.5rem; color: var(--text-main);">
+            Sistem Antrian <br>
+            <span
+                style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Poliklinik
+                Pintar</span>
+        </h1>
+
+        <p style="font-size: 1.25rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 3rem;">
+            Tinggalkan cara lama. Mulai daftar antrian secara online dari mana saja, pantau status panggilan secara
+            real-time, dan hemat waktu Anda tanpa perlu menunggu lama di rumah sakit.
+        </p>
+
     </div>
-    
-    <style>
-        @keyframes float {
-            0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(2deg); }
-            100% { transform: translateY(0px) rotate(0deg); }
+
+    <!-- Right Column: Abstract Glass UI Illustration -->
+    <div class="hero-right-col" style="flex: 1; position: relative; height: 500px;">
+        <!-- Decorative Back Glow / Heartbeat effect -->
+        <div
+            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 350px; height: 350px; background: radial-gradient(circle, var(--primary) 0%, rgba(255,255,255,0) 70%); filter: blur(50px); border-radius: 50%; opacity: 0.2; animation: heartbeat 2s ease-in-out infinite;">
+        </div>
+
+        <!-- Floating Card 1: Queue Ticket -->
+        <div class="card"
+            style="position: absolute; top: 15%; right: 5%; width: 320px; padding: 1.5rem; background: rgba(255,255,255,0.85); z-index: 2; animation: float 6s ease-in-out infinite; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);">
+            <div
+                style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--border);">
+                <div
+                    style="width: 50px; height: 50px; border-radius: 12px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.75rem;">
+                    <i class='bx bx-user-pin'></i>
+                </div>
+                <div>
+                    <div style="font-weight: 800; color: var(--primary-dark); font-size: 1.1rem;">Antrian A-012</div>
+                    <div style="font-size: 0.875rem; color: var(--text-muted); font-weight: 500;">Poli Jantung &
+                        Pembuluh</div>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div
+                    style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-muted);">
+                    <i class='bx bx-time-five' style="font-size: 1.25rem;"></i> Estimasi Waktu
+                </div>
+                <span
+                    style="background: #ecfdf5; color: #059669; padding: 0.35rem 0.85rem; border-radius: 99px; font-size: 0.875rem; font-weight: 700; box-shadow: 0 2px 4px rgba(16,185,129,0.2);">10:30
+                    WIB</span>
+            </div>
+        </div>
+
+        <!-- Floating Card 2: Notification Modal -->
+        <div class="card"
+            style="position: absolute; bottom: 20%; left: -5%; width: 280px; padding: 1.5rem; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 3; animation: float 8s ease-in-out infinite reverse; border: 1px solid rgba(255,255,255,0.6);">
+            <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                <div
+                    style="font-size: 2.5rem; color: var(--secondary); margin-top: -0.25rem; animation: popIn 2.5s infinite;">
+                    <i class='bx bxs-check-circle'></i></div>
+                <div>
+                    <h4 style="font-size: 1.05rem; margin-bottom: 0.25rem; font-weight: 700; color: var(--text-main);">
+                        Pendaftaran Sukses</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">Data rekam medis Anda
+                        telah divalidasi sistem otomatis kami.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Decorative Medical Icons Background -->
+        <div
+            style="position: absolute; top: 0; left: 15%; font-size: 4rem; color: var(--primary); opacity: 0.15; animation: pulse 4s infinite;">
+            <i class='bx bx-plus-medical'></i></div>
+        <div
+            style="position: absolute; bottom: 5%; right: 10%; font-size: 5rem; color: var(--secondary); opacity: 0.1; animation: float 7s infinite;">
+            <i class='bx bx-capsule'></i></div>
+        <div
+            style="position: absolute; top: 40%; right: -10%; font-size: 3rem; color: var(--text-muted); opacity: 0.1; animation: popIn 6s infinite;">
+            <i class='bx bx-dna'></i></div>
+        <div
+            style="position: absolute; bottom: 45%; left: 0%; font-size: 3rem; color: var(--accent); opacity: 0.1; animation: pulse 5s infinite;">
+            <i class='bx bx-heart'></i></div>
+    </div>
+</div>
+
+<style>
+    @keyframes float {
+        0% {
+            transform: translateY(0px) rotate(0deg);
         }
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.15; }
-            50% { transform: scale(1.1); opacity: 0.25; }
-            100% { transform: scale(1); opacity: 0.15; }
+
+        50% {
+            transform: translateY(-15px) rotate(2deg);
         }
-        @keyframes heartbeat {
-            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.15; }
-            15% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.25; }
-            30% { transform: translate(-50%, -50%) scale(1); opacity: 0.15; }
-            45% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.25; }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 0.15; }
+
+        100% {
+            transform: translateY(0px) rotate(0deg);
         }
-        @keyframes popIn {
-            0% { transform: scale(0.9); opacity: 0.5; }
-            50% { transform: scale(1.05); opacity: 1; }
-            100% { transform: scale(0.9); opacity: 0.5; }
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+            opacity: 0.15;
         }
-        
-        .hero-right-col { display: block; }
-        /* Hide right column entirely on tablets and smaller screens to keep it clean */
-        @media (max-width: 900px) {
-            .hero-right-col { display: none !important; }
+
+        50% {
+            transform: scale(1.1);
+            opacity: 0.25;
         }
-    </style>
+
+        100% {
+            transform: scale(1);
+            opacity: 0.15;
+        }
+    }
+
+    @keyframes heartbeat {
+        0% {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.15;
+        }
+
+        15% {
+            transform: translate(-50%, -50%) scale(1.15);
+            opacity: 0.25;
+        }
+
+        30% {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.15;
+        }
+
+        45% {
+            transform: translate(-50%, -50%) scale(1.15);
+            opacity: 0.25;
+        }
+
+        100% {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.15;
+        }
+    }
+
+    @keyframes popIn {
+        0% {
+            transform: scale(0.9);
+            opacity: 0.5;
+        }
+
+        50% {
+            transform: scale(1.05);
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(0.9);
+            opacity: 0.5;
+        }
+    }
+
+    .hero-right-col {
+        display: block;
+    }
+
+    /* Hide right column entirely on tablets and smaller screens to keep it clean */
+    @media (max-width: 900px) {
+        .hero-right-col {
+            display: none !important;
+        }
+    }
+</style>
 {% endif %}
 {% endblock %}

@@ -40,7 +40,7 @@ def logout_pasien(request):
 
 def beranda(request):
     polis = Poli.objects.all()
-    today = timezone.now().date()
+    today = timezone.localdate()
     total_antrian_hari_ini = Antrian.objects.filter(tanggal=today).count()
     
     context = {
@@ -124,7 +124,7 @@ def status_antrian(request, antrian_id):
     return render(request, 'antrian/status.html', {'antrian': antrian})
 
 def daftar_antrian(request):
-    today = timezone.now().date()
+    today = timezone.localdate()
     # List polyclinics and their queues today
     antrian_hari_ini = Antrian.objects.filter(tanggal=today).order_by('poli', 'nomor_antrian')
     return render(request, 'antrian/daftar.html', {'antrian_list': antrian_hari_ini, 'tanggal': today})

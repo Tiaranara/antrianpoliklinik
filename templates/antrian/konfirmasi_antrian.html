@@ -3,7 +3,14 @@
 {% block title %}Konfirmasi Antrian - RS SehatPlus{% endblock %}
 
 {% block content %}
-<div class="card" style="max-width: 600px; margin: 0 auto;">
+<!-- Kembali ke beranda -->
+<div style="display: flex; justify-content: flex-start; width: 100%; margin-bottom: 1rem;">
+    <a href="{% url 'beranda' %}" class="back-link" style="margin-top: 0; margin-bottom: 0;">
+        <i class='bx bx-left-arrow-alt'></i> Kembali ke Beranda
+    </a>
+</div>
+
+<div class="card" style="max-width: 600px; margin: 0 auto; width: 100%;">
     <h2 style="margin-bottom: 0.5rem; text-align: center; color: var(--primary-dark);">Ringkasan Janji Temu</h2>
     <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Silakan periksa kembali data kunjungan Anda sebelum mengonfirmasi.</p>
 
@@ -49,12 +56,5 @@
             </button>
         </div>
     </form>
-</div>
-
-<!-- Kembali ke beranda -->
-<div style="margin-top: 2rem; text-align: center;">
-    <a href="{% url 'beranda' %}" style="color: var(--text-muted); font-size: 0.95rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.4rem; transition: color 0.3s;">
-        <i class='bx bx-arrow-back'></i> Kembali ke Beranda
-    </a>
 </div>
 {% endblock %}
